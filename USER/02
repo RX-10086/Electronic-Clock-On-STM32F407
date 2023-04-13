@@ -1,0 +1,48 @@
+#include "sys.h"
+#include "delay.h"
+#include "usart.h"
+#include "rtc.h"
+#include "lcd.h"
+#include "lcd_init.h"
+#include "Reimu.h"
+#include "Marisa.h"
+
+RTC_TimeTypeDef RTC_TimeStruct;
+RTC_DateTypeDef RTC_DateStruct;
+
+u8 tbuf_1[20];
+u8 tbuf_2[20];
+
+char WEEK[7][4] = {"MON","TUE","WEN","THU","FRI","SAT","SUN"};
+
+void DISPLAY_MODE_1(void)
+{
+	LCD_Init();
+	LCD_Fill(0,0,LCD_W,LCD_H,GRAYBLUE);
+	LCD_ShowPicture(0,36,128,128,gImage_Reimu);
+}
+void DISPLAY_MODE_1_FRESH(void)
+{
+	RTC_GetTime(RTC_Format_BIN,&RTC_TimeStruct);
+	sprintf((char*)tbuf_1,"%02d:%02d:%02d",RTC_TimeStruct.RTC_Hours,RTC_TimeStruct.RTC_Minutes,RTC_TimeStruct.RTC_Seconds); 
+	RTC_GetDate(RTC_Format_BIN, &RTC_DateStruct);
+	sprintf((char*)tbuf_2,"20%02d-%02d-%02d",RTC_DateStruct.RTC_Year,RTC_DateStruct.RTC_Month,RTC_DateStruct.RTC_Date); 
+	LCD_ShowString(10,1,tbuf_1,WHITE,GRAYBLUE,16,0);
+	LCD_ShowString(10,20,tbuf_2,WHITE,GRAYBLUE,12,0); 
+	LCD_ShowString(80,20,WEEK[RTC_DateStruct.RTC_WeekDay - 1],YELLOW,GRAYBLUE,12,0);
+}
+void flag_CHG_DISPLAY()
+{
+	LCD_DrawRectangle(96,1,116,21,RED);
+	LCD_ShowString(98,2,(RTC_TimeStruct.RTC_Hours <= 12)?"AM":"PM",RED,GRAYBLUE,16,0);
+	RTC_TimeStruct.RTC_Hours = (RTC_TimeStruct.RTC_Hours >= 12)?(RTC_TimeStruct.RTC_Hours - 12):(RTC_TimeStruct.RTC_Hours);
+	LCD_ShowPicture(0,32,128,128,gImage_Marisa);
+}
+void flag_CHG_DISPLAY_2()
+{
+	LCD_Init();
+	LCD_Fill(0,0,LCD_W,LCD_H,GRAYBLUE);
+	LCD_ShowPicture(0,32,128,128,gImage_Reimu);
+}
+
+

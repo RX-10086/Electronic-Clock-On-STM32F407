@@ -1,0 +1,11 @@
+#ifndef __RTC_FUNC_01_H
+#define __RTC_FUNC_01_H
+#include "sys.h"
+
+void Display_MODE_1(void);
+void Display_MODE_1_FRESH(void);
+void flag_CHG_DISPLAY(void);
+void flag_CHG_DISPLAY_2(void);
+
+#endif
+
